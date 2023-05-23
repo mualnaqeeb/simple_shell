@@ -46,8 +46,6 @@ int print_err(char *msg)
 	return (print_to_fd(msg, STDERR));
 }
 
-#include "general.h"
-#include "text.h"
 
 /**
  * _putchar - Print a character to STDOUT

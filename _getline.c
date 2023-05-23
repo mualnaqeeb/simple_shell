@@ -38,7 +38,7 @@ char *replace_value(general_t *info, int *index, char *string)
 	if (value == NULL)
 	{
 		string = _strcpy(string, "");
-		return (string);;
+		return (string);
 	}
 
 	old_s = _strlen(string);
