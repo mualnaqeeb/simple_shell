@@ -1,52 +1,66 @@
 #include "shell.h"
+
 /**
-**builtin_execute - executes the built in functions
-**@tokens: arguments being passed
-**Return: tokens
-**/
-int builtin_execute(char **tokens)
+ * execute - Execute a command in other process
+ *
+ * @command: Command to execute
+ * @arguments: Arguments of the @command
+ * @info: General info about the shell
+ * @buff: Line readed
+ **/
+void execute(char *command, char **arguments, general_t *info, char *buff)
 {
 	int status;
-	unsigned int length;
-	unsigned int num;
-	unsigned int i;
+	pid_t pid;
 
-	built_s builtin[] = {
-		{"exit", shell_exit},
-		{"env", shell_env},
-		{NULL, NULL}
-	};
-
-	if (tokens[0] == NULL)
-		return (1);
-
-	length = _strlen(tokens[0]);
-
-	num = shell_num_builtins(builtin);
-	for (i = 0; i < num; i++)
+	pid = fork();
+	if (pid == 0)
 	{
-		if (_strcmp(tokens[0], builtin[i].name, length) == 0)
+		execve(command, arguments, environ);
+		perror("./sh");
+
+		free_memory_pp((void *) arguments);
+
+		if (info->value_path != NULL)
 		{
-			status = (builtin[i].p)();
-			return (status);
+			free(info->value_path);
+			info->value_path = NULL;
 		}
+
+		free(info);
+		free(buff);
+		exit(1);
 	}
-	return (1);
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			info->status_code = WEXITSTATUS(status);
+	}
 }
 
+
 /**
-**shell_num_builtins - this check num built-ins
-**@builtin: takes the builtin to be counted
-**Return: num of built-ins
-**/
-
-int shell_num_builtins(built_s builtin[])
+ * current_directory - Execute the command if the order require
+ *
+ * @cmd: Command to execute
+ * @arguments: Arguments of the @cmd
+ * @buff: Line readed
+ * @info: General info about the shell
+ *
+ * Return: Status of the operations
+ **/
+int current_directory(char *cmd, char **arguments, char *buff, general_t *info)
 {
-	unsigned int i;
 
-	i = 0;
-	while (builtin[i].name != NULL)
-		i++;
+	if (info->is_current_path == _FALSE)
+		return (_FALSE);
 
-	return (i);
+	if (is_executable(cmd) == PERMISSIONS)
+	{
+		execute(cmd, arguments, info, buff);
+		return (_TRUE);
+	}
+
+	return (_FALSE);
 }

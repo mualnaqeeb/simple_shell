@@ -1,28 +1,12 @@
 #include "shell.h"
 
 /**
- * prompt - checks mode and prints prompt if in interactive mode
- * @fd: file stream
- * @buf: buffer
-**/
-void prompt(int fd, struct stat buf)
+ * start - Handle the mode
+ * Description: Mode can be INTERACTIVE or NON_INTERACTIVE
+ *
+ * @info: Struct of information about the shell
+ **/
+void start(general_t *info)
 {
-	fstat(fd, &buf);
-
-	if (S_ISCHR(buf.st_mode))
-		_puts(PROMPT);
-}
-
-/**
- * _puts - prints a string without a \n
- * @str: string to print
- * Return: void
- */
-void _puts(char *str)
-{
-	unsigned int length;
-
-	length = _strlen(str);
-
-	write(STDOUT_FILENO, str, length);
+	start_prompt(info);
 }

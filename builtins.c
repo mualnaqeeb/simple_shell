@@ -1,30 +1,53 @@
 #include "shell.h"
-/**
-**shell_exit - exits the shell
-**Return: void
-**/
-
-	int shell_exit(void)
-	{
-		return (-1);
-	}
-
 
 /**
-**shell_env - prints environment
-**Return: void
-**/
+ * builtins - Check and execute the builtins
+ *
+ * @info: Information about the shell
+ * @arguments: Commands and arguments
+ *
+ * Return: If the command passed is a builtins
+ * return _TRUE if not return _FALSE
+ **/
+int builtins(general_t *info, char **arguments)
+{
+	int status;
 
-	int shell_env(void)
+	status = check_builtin(info, arguments);
+	if (status == _FALSE)
+		return (_FALSE);
+
+	return (_TRUE);
+}
+
+
+/**
+ * check_builtin - Check if the actual command is a builtin_t
+ * or not
+ *
+ * @info: General information about the shell
+ * @arguments: Arguments of the command
+ *
+ * Return: If the command is an actual builtin, return _TRUE
+ * if not _FALSE
+ **/
+int check_builtin(general_t *info, char **arguments)
+{
+	int i, size;
+	builtin_t builtins[] = {
+		{"exit", bin_exit},
+		{"env", bin_env}
+	};
+
+	size = sizeof(builtins) / sizeof(builtins[0]);
+	for (i = 0; i < size; i++)
 	{
-		unsigned int i;
-
-		i = 0;
-		while (environ[i] != NULL)
+		if (_strcmp(info->command, builtins[i].command) == 0)
 		{
-			write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
-			write(STDOUT_FILENO, "\n", 1);
-			i++;
+			builtins[i].func(info, arguments);
+			return (_TRUE);
 		}
-		return (0);
 	}
+
+	return (_FALSE);
+}
