@@ -1,10 +1,10 @@
 #include "shell.h"
 /**
  * replacement - searches directories in PATH variable for command
- * @command: to search for
- * @fullpath: full path of command to execute
- * @path: full PATH variable
- * Return: pointer to full_path
+ * @info: general information
+ * @index: index of PATH variable
+ * @string: string to replace
+ * Return: string with replaced variables
  */
 char *replacement(general_t *info, int *index, char *string)
 {
@@ -26,6 +26,12 @@ char *replacement(general_t *info, int *index, char *string)
 	return (tmp);
 }
 
+/**
+ * replace_env - replaces environment variables in string
+ * @info: general information
+ * @environment: environment variable
+ * Return: string with replaced variables
+*/
 char *replace_env(general_t *info, char *environment)
 {
 	char *env;

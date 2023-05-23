@@ -39,7 +39,7 @@ char *pattern_handler(general_t *info, char *string)
  * @index: index
  * @string: string
  * Return: string with replaced value
- */ 
+ */
 char *replace_value(general_t *info, int *index, char *string)
 {
 	int i, new_s, old_s;
