@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	info = malloc(sizeof(general_t));
 	if (info == NULL)
 	{
-		perror(argv[0]);
+		error(argv[0]);
 		exit(1);
 	}
 

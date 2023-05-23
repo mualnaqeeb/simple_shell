@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#include <stdio.h>
 /**
  * execute - Execute a command in other process
  *
@@ -17,9 +17,9 @@ void execute(char *command, char **arguments, general_t *info, char *buff)
 	if (pid == 0)
 	{
 		execve(command, arguments, environ);
-		perror("./sh");
+		error("./sh");
 
-		free_memory_pp((void *) arguments);
+		free_memory_pp((void *)arguments);
 
 		if (info->value_path != NULL)
 		{
@@ -38,7 +38,6 @@ void execute(char *command, char **arguments, general_t *info, char *buff)
 			info->status_code = WEXITSTATUS(status);
 	}
 }
-
 
 /**
  * current_directory - Execute the command if the order require
