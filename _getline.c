@@ -2,7 +2,8 @@
 
 /**
  * analyze_patterns - puts input from user into buffer line
- * @fp: buffer for user input
+ * @info: general information
+ * @arguments: arguments from user input
  * Return: buffer with user input
  */
 void analyze_patterns(general_t *info, char **arguments)
@@ -13,6 +14,12 @@ void analyze_patterns(general_t *info, char **arguments)
 		arguments[i] = pattern_handler(info, arguments[i]);
 }
 
+/**
+ * pattern_handler - replaces patterns
+ * @info: general information
+ * @string: string to replace patterns
+ * Return: string with replaced patterns
+ */
 char *pattern_handler(general_t *info, char *string)
 {
 	int i;
@@ -26,6 +33,13 @@ char *pattern_handler(general_t *info, char *string)
 	return (string);
 }
 
+/**
+ * replace_value - replaces value
+ * @info: general information
+ * @index: index
+ * @string: string
+ * Return: string with replaced value
+ */ 
 char *replace_value(general_t *info, int *index, char *string)
 {
 	int i, new_s, old_s;
