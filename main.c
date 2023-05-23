@@ -1,36 +1,50 @@
 #include "shell.h"
 
 /**
- * main - Entry point of the shell
- *
- * @argc: Number of arguments received
- * @argv: Arguments received
- *
- * Return: 0 on success and 1 on error
- **/
-int main(int argc, char **argv)
+ * main - open shell, project base
+ * Return: int
+ */
+
+int main(void)
 {
-	general_t *info;
-	int status_code;
+	char *buff = NULL, **args;
+	size_t read_size = 0;
+	ssize_t buff_size = 0;
+	int exit_status = 0;
 
-	info = malloc(sizeof(general_t));
-	if (info == NULL)
+	while (1)
 	{
-		error(argv[0]);
-		exit(1);
+		if (isatty(0))
+			printf("hsh$ ");
+
+		buff_size = getline(&buff, &read_size, stdin);
+		if (buff_size == -1 || _strcmp("exit\n", buff) == 0)
+		{
+			free(buff);
+			break;
+		}
+		buff[buff_size - 1] = '\0';
+
+		if (_strcmp("env", buff) == 0)
+		{
+			_env();
+			continue;
+		}
+
+		if (empty_line(buff) == 1)
+		{
+			exit_status = 0;
+			continue;
+		}
+
+		args = _split(buff, " ");
+		args[0] = search_path(args[0]);
+
+		if (args[0] != NULL)
+			exit_status = execute(args);
+		else
+			perror("Error");
+		free(args);
 	}
-
-	info->pid = getpid();
-	info->status_code = 0;
-	info->n_commands = 0;
-	info->argc = argc;
-	info->argv = argv;
-	info->mode = isatty(STDIN) == INTERACTIVE;
-	start(info);
-
-	status_code = info->status_code;
-
-	free(info);
-
-	return (status_code);
+	return (exit_status);
 }
